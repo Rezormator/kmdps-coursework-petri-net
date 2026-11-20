@@ -4,4 +4,39 @@
 Завдання B1, формалізм — стохастична мережа Петрі.
 
 Модель побудовано на бібліотеці [PetriObjModelPaint](https://github.com/StetsenkoInna/PetriObjModelPaint)
-(модуль `petri-math`), мова — Java 23+, збірка — Maven.
+(модуль `petri-math` 2.6.0): мережу намальовано в графічному редакторі бібліотеки й збережено як
+Java-метод, імітацію виконує алгоритм бібліотеки (`PetriObjModel`, `PetriSim`). Код бібліотеки
+не змінювався.
+
+## Структура
+
+- `net/WorkshopNet` — метод `CreateNetWorkshop()`, згенерований редактором PetriObjModelPaint.
+- `model` — параметри моделі, запуск імітації, власний збирач статистики `NetStatistics`
+  (реалізує `SimulationStatisticCollector`, відкидає перехідний період), вихідні характеристики.
+- `experiments` — верифікація, перехідний період, кількість прогонів, оцінки, дисперсійний аналіз,
+  факторний експеримент 2², пробні запуски пропозицій, графіки.
+- `Main` — меню режимів.
+
+## Вимоги
+
+- Java 23 або новіша
+- Maven 3.9+ (або вбудований у IntelliJ IDEA)
+
+## Запуск
+
+В IntelliJ IDEA: відкрити теку з `pom.xml`, обрати SDK 23+ і запустити клас `ua.kpi.workshop.Main`.
+
+З командного рядка:
+
+```
+mvn compile exec:java
+mvn compile exec:java -Dexec.args=verify
+mvn compile exec:java -Dexec.args=all
+```
+
+Режими: `run`, `net`, `protocol`, `verify`, `transient`, `replications`, `estimate`,
+`threshold`, `startup`, `factorial`, `proposals`, `all`. Результати (таблиці та графіки)
+зберігаються в теці `results`.
+
+Генератор випадкових чисел бібліотеки не має початкового числа, тому результати повторних
+запусків відрізняються в межах довірчих інтервалів.
