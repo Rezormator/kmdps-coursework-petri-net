@@ -1,0 +1,122 @@
+package ua.kpi.workshop.net;
+
+import java.util.ArrayList;
+import ua.stetsenkoinna.petriobj.ArcIn;
+import ua.stetsenkoinna.petriobj.ArcOut;
+import ua.stetsenkoinna.petriobj.ExceptionInvalidNetStructure;
+import ua.stetsenkoinna.petriobj.ExceptionInvalidTimeDelay;
+import ua.stetsenkoinna.petriobj.PetriNet;
+import ua.stetsenkoinna.petriobj.PetriP;
+import ua.stetsenkoinna.petriobj.PetriT;
+
+public final class WorkshopNet {
+
+	private WorkshopNet() {
+	}
+
+	public static PetriNet CreateNetWorkshop() throws ExceptionInvalidNetStructure, ExceptionInvalidTimeDelay {
+		ArrayList<PetriP> d_P = new ArrayList<>();
+		ArrayList<PetriT> d_T = new ArrayList<>();
+		ArrayList<ArcIn> d_In = new ArrayList<>();
+		ArrayList<ArcOut> d_Out = new ArrayList<>();
+		d_P.add(new PetriP("Генератор",1));
+		d_P.add(new PetriP("ЧергаП",0));
+		d_P.add(new PetriP("П1вільний",1));
+		d_P.add(new PetriP("П2вільний",1));
+		d_P.add(new PetriP("ПісляП1",0));
+		d_P.add(new PetriP("ПісляП2",0));
+		d_P.add(new PetriP("ЧергаПовт",0));
+		d_P.add(new PetriP("ПісляПовт",0));
+		d_P.add(new PetriP("Накопичувач",0));
+		d_P.add(new PetriP("В1вільний",1));
+		d_P.add(new PetriP("В2вільний",1));
+		d_P.add(new PetriP("Надійшло",0));
+		d_P.add(new PetriP("Відходи",0));
+		d_P.add(new PetriP("ГотовіВ1",0));
+		d_P.add(new PetriP("ГотовіВ2",0));
+		d_T.add(new PetriT("Надходження",50.0));
+		d_T.get(0).setDistribution("exp", d_T.get(0).getTimeServ());
+		d_T.get(0).setParamDeviation(0.0);
+		d_T.add(new PetriT("Обробка на П1",40.0));
+		d_T.get(1).setDistribution("exp", d_T.get(1).getTimeServ());
+		d_T.get(1).setParamDeviation(0.0);
+		d_T.get(1).setPriority(1);
+		d_T.add(new PetriT("Обробка на П2",60.0));
+		d_T.get(2).setDistribution("exp", d_T.get(2).getTimeServ());
+		d_T.get(2).setParamDeviation(0.0);
+		d_T.add(new PetriT("П1: якісна",0.0));
+		d_T.get(3).setPriority(2);
+		d_T.get(3).setProbability(0.96);
+		d_T.add(new PetriT("П1: брак",0.0));
+		d_T.get(4).setPriority(2);
+		d_T.get(4).setProbability(0.04);
+		d_T.add(new PetriT("П2: якісна",0.0));
+		d_T.get(5).setPriority(2);
+		d_T.get(5).setProbability(0.92);
+		d_T.add(new PetriT("П2: брак",0.0));
+		d_T.get(6).setPriority(2);
+		d_T.get(6).setProbability(0.08);
+		d_T.add(new PetriT("Повторна обробка на П2",60.0));
+		d_T.get(7).setDistribution("exp", d_T.get(7).getTimeServ());
+		d_T.get(7).setParamDeviation(0.0);
+		d_T.get(7).setPriority(1);
+		d_T.add(new PetriT("Повт: якісна",0.0));
+		d_T.get(8).setPriority(2);
+		d_T.get(8).setProbability(0.92);
+		d_T.add(new PetriT("Повт: відходи",0.0));
+		d_T.get(9).setPriority(2);
+		d_T.get(9).setProbability(0.08);
+		d_T.add(new PetriT("Обробка на В1",100.0));
+		d_T.get(10).setDistribution("exp", d_T.get(10).getTimeServ());
+		d_T.get(10).setParamDeviation(0.0);
+		d_T.get(10).setPriority(1);
+		d_T.add(new PetriT("Обробка на В2",100.0));
+		d_T.get(11).setDistribution("exp", d_T.get(11).getTimeServ());
+		d_T.get(11).setParamDeviation(0.0);
+		d_In.add(new ArcIn(d_P.get(0),d_T.get(0),1));
+		d_In.add(new ArcIn(d_P.get(1),d_T.get(1),1));
+		d_In.add(new ArcIn(d_P.get(2),d_T.get(1),1));
+		d_In.add(new ArcIn(d_P.get(1),d_T.get(2),1));
+		d_In.add(new ArcIn(d_P.get(3),d_T.get(2),1));
+		d_In.add(new ArcIn(d_P.get(4),d_T.get(3),1));
+		d_In.add(new ArcIn(d_P.get(4),d_T.get(4),1));
+		d_In.add(new ArcIn(d_P.get(5),d_T.get(5),1));
+		d_In.add(new ArcIn(d_P.get(5),d_T.get(6),1));
+		d_In.add(new ArcIn(d_P.get(6),d_T.get(7),1));
+		d_In.add(new ArcIn(d_P.get(3),d_T.get(7),1));
+		d_In.add(new ArcIn(d_P.get(7),d_T.get(8),1));
+		d_In.add(new ArcIn(d_P.get(7),d_T.get(9),1));
+		d_In.add(new ArcIn(d_P.get(8),d_T.get(10),1));
+		d_In.add(new ArcIn(d_P.get(9),d_T.get(10),1));
+		d_In.add(new ArcIn(d_P.get(8),d_T.get(11),1));
+		d_In.add(new ArcIn(d_P.get(10),d_T.get(11),1));
+		d_In.add(new ArcIn(d_P.get(8),d_T.get(11),4));
+		d_In.get(17).setInf(true);
+		d_Out.add(new ArcOut(d_T.get(0),d_P.get(0),1));
+		d_Out.add(new ArcOut(d_T.get(0),d_P.get(1),1));
+		d_Out.add(new ArcOut(d_T.get(0),d_P.get(11),1));
+		d_Out.add(new ArcOut(d_T.get(1),d_P.get(2),1));
+		d_Out.add(new ArcOut(d_T.get(1),d_P.get(4),1));
+		d_Out.add(new ArcOut(d_T.get(2),d_P.get(3),1));
+		d_Out.add(new ArcOut(d_T.get(2),d_P.get(5),1));
+		d_Out.add(new ArcOut(d_T.get(3),d_P.get(8),1));
+		d_Out.add(new ArcOut(d_T.get(4),d_P.get(6),1));
+		d_Out.add(new ArcOut(d_T.get(5),d_P.get(8),1));
+		d_Out.add(new ArcOut(d_T.get(6),d_P.get(6),1));
+		d_Out.add(new ArcOut(d_T.get(7),d_P.get(3),1));
+		d_Out.add(new ArcOut(d_T.get(7),d_P.get(7),1));
+		d_Out.add(new ArcOut(d_T.get(8),d_P.get(8),1));
+		d_Out.add(new ArcOut(d_T.get(9),d_P.get(12),1));
+		d_Out.add(new ArcOut(d_T.get(10),d_P.get(9),1));
+		d_Out.add(new ArcOut(d_T.get(10),d_P.get(13),1));
+		d_Out.add(new ArcOut(d_T.get(11),d_P.get(10),1));
+		d_Out.add(new ArcOut(d_T.get(11),d_P.get(14),1));
+		PetriNet d_Net = new PetriNet("Workshop",d_P,d_T,d_In,d_Out);
+		PetriP.initNext();
+		PetriT.initNext();
+		ArcIn.initNext();
+		ArcOut.initNext();
+
+		return d_Net;
+	}
+}
